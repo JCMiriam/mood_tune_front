@@ -133,8 +133,8 @@ const Moods = () => {
               {/* 🔹 Mostrar solo UNA versión de la letra */}
               <p className="lyrics">
                 {showTranslation[song.id]
-                  ? `${song.translated_lyrics.slice(0, 499)}...` // Añadir "..." para indicar que sigue
-                  : `${song.processed_lyrics.slice(0, 499)}...`}
+                  ? song.translated_lyrics ? `${song.translated_lyrics.slice(0, 499)}...` : "No translation available"
+                  : song.processed_lyrics ? `${song.processed_lyrics.slice(0, 499)}...` : "No lyrics available"}
               </p>
 
               {/* 🔹 Botón para alternar traducción */}

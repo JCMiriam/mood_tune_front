@@ -76,3 +76,13 @@ export type TrackResponse = {
         picture: string;
     };
 };
+
+export interface RecommendedSong {
+    id: string;
+    song_name: string;
+    artist_name: string;
+    spotify_url: string;
+    translated_lyrics?: string;
+    processed_lyrics?: string;
+  }
+  

@@ -5,7 +5,7 @@ import { Textarea } from "../../components/Textarea/Textarea";
 import GenreFilter from "../../components/GenreFilter/GenreFilter";
 import ParametersSettings from "../../components/ParametersSettings/ParametersSettings";
 import { useNavigate } from "react-router-dom";
-import { API_URL, reducedGenreGroups } from "../../config";
+import { API_URL, reducedGenreGroups, genreGroups } from "../../config";
 import VerticalParametersSettings from "../../components/VerticalParametersSettings/VerticalParametersSettings";
 import "./MoodForm.scss";
 
@@ -43,9 +43,9 @@ const MoodForm = () => {
   
       const recommendedSongs = await response.json();
       localStorage.setItem("moodPlaylist", JSON.stringify(recommendedSongs));
-      localStorage.setItem("moodText", moodText); // 💡 Solo guardarlo aquí
+      localStorage.setItem("moodText", moodText);
   
-      navigate("/moods"); // Redirigir a la página de moods en la misma pestaña
+      navigate("/moods");
   
     } catch (error) {
       console.error("Error al obtener las recomendaciones:", error);
@@ -53,6 +53,52 @@ const MoodForm = () => {
       setLoading(false);
     }
   };  
+
+  const handleGetSimilarSongs = async () => {
+    setLoading(true);
+    try {
+      // Obtener preferencias e importancias desde localStorage
+      const preferences = JSON.parse(localStorage.getItem("moodtune_preferences") || "{}");
+      const importances = JSON.parse(localStorage.getItem("moodtune_settings") || "{}");
+  
+      if (!Object.keys(preferences).length || !Object.keys(importances).length) {
+        throw new Error("No hay preferencias o importancias guardadas.");
+      }
+  
+      // Obtener palabras clave de los géneros seleccionados usando `genreGroups`
+      let additionalKeywords: string[] = [];
+      if (!selectedGenres.includes("all genres")) {
+        additionalKeywords = selectedGenres.flatMap(genre => genreGroups[genre] || []);
+      }
+  
+      const response = await fetch(`${API_URL}/songs/recommendations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          preferences,
+          importances,
+          genres: additionalKeywords,
+        }),
+      });
+  
+      if (!response.ok) throw new Error("Error al obtener recomendaciones");
+  
+      const recommendedSongs = await response.json();
+  
+      // Guardar las canciones recomendadas en localStorage
+      localStorage.setItem("moodPlaylist", JSON.stringify(recommendedSongs.recommended_tracks));
+      localStorage.setItem("moodText", "Canciones Similares"); // Un nombre genérico para la playlist
+  
+      // Redirigir a la página de moods
+      navigate("/moods");
+  
+    } catch (error) {
+      console.error("Error al obtener recomendaciones:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   
   return (
     <div className="mood-form">
@@ -73,7 +119,7 @@ const MoodForm = () => {
             <div className="mood-form__form-buttons">
               <Button type="submit" variant="primary" text={loading ? "Cargando..." : t("mood-form.get-playlist-mood")} />
               <span className="mood-form__form-divisor">{t("mood-form.or")}</span>
-              <Button type="button" variant="secondary" text={t("mood-form.get-something-like")} />
+              <Button type="button" variant="secondary" text={t("mood-form.get-something-like")} onClick={handleGetSimilarSongs} />
             </div>
 
             <div className="mood-form__block-bottom">

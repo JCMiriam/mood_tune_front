@@ -4,7 +4,7 @@ import Login from "./pages/Login/Login";
 import Callback from "./pages/Login/Callback";
 import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy";
 import MoodForm from "./pages/MoodForm/MoodForm";
-import Moods from "./pages/Moods/Moods"; // Agregado
+import Moods from "./pages/Moods/Moods";
 import ProtectedRoute from "./hooks/protectedRoute";
 import MyPlaylists from "./pages/MyPlaylists/MyPlaylists";
 import MyTracks from "./pages/MyTracks/MyTracks";
@@ -17,18 +17,6 @@ import LoadingSpinner from "./components/LoadingSpinner/LoadingSpinner";
 
 import "./assets/icons/style.scss";
 import "./styles/_global.scss"
-
-
-const handleAnalyzeMood = (moodText: string, genres?: string[]) => {
-    console.log("Mood", moodText);
-    if (genres && genres.length > 0) {
-        console.log("Géneros");
-    }
-};
-
-const handleGetSurprisePlaylist = () => {
-    // Aquí podrías hacer una petición a tu backend para obtener una playlist aleatoria.
-};
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     const { isLoading } = useLoading();
@@ -48,7 +36,7 @@ const AppContent = () => {
     return (
         <Routes>
             <Route path="/" element={<ProtectedRoute element={
-                <MoodForm onAnalyzeMood={handleAnalyzeMood} onGetSurprisePlaylist={handleGetSurprisePlaylist} />
+                <MoodForm />
             } />} />
             <Route path="/login" element={<Login />} />
             <Route path="/callback" element={<Callback />} />

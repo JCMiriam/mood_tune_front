@@ -86,10 +86,10 @@ const VerticalParametersSettings = () => {
   };
 
   // 🔹 Manejo de eventos para sliders
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>, setting: string) => {
+  const handleMouseDown = (_: React.MouseEvent<HTMLDivElement>, setting: string) => {
     setIsDragging(true);
     setCurrentSetting(setting);
-  };
+  };  
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging || !currentSetting) return;
