@@ -26,7 +26,8 @@ const icons = [
     "icon-skull",
     "icon-surprise",
     "icon-tired",
-    "icon-upbeat"
+    "icon-upbeat",
+    "icon-sheep"
 ];
 
 const LoadingSpinner = ({ interval = 1000 }: LoadingSpinnerProps) => {

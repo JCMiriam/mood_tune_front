@@ -147,7 +147,7 @@ const VerticalParametersSettings = () => {
 
               <div
                 className="vertical-parameters-settings__bar-fill"
-                style={{ height: `${preferences[setting] || 50}%` }}
+                style={{ maxHeight: '200px', minHeight: '2px', height: `${(Math.round(preferences[setting]) * 2)}px` }}
               ></div>
 
               <input
@@ -163,7 +163,7 @@ const VerticalParametersSettings = () => {
             <div className="vertical-parameters-settings__description">
               <label className="vertical-parameters-settings__label">
                 <span className={`icon ${SETTINGS_ICONS[setting]}`}></span>
-                <span className="vertical-parameters-settings__percentage">{preferences[setting] || 50}%</span>
+                <span className="vertical-parameters-settings__percentage">{Math.round(preferences[setting]) || 0}%</span>
               </label>
               <span className="vertical-parameters-settings__setting-name">{t(`settings.${setting}`)}</span>
             </div>

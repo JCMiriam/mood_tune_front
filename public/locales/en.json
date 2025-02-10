@@ -1,4 +1,8 @@
 {
+    "common": {
+        "view-more": "View more",
+        "view-less": "See less"
+    },
     "loading": {
         "loading": "Loading...",
         "almost-here": "We're almost here...",
@@ -117,5 +121,11 @@
         "contact-title": "8. Contact",
         "contact": "If you have any questions about our privacy policy, you can write to us at support@moodtune.com",
         "acceptance": "By using MoodTune, you accept the terms of this privacy and cookies policy."
+    },
+    "empty-data": {
+        "playlists": "Upps... It's look like you still don't have any MoodTune playlist created. Why don't you take a look to our recommendations process?"
+    },
+    "playlists": {
+        "title": "Your MoodTune created Playlists"
     }
 }

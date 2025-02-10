@@ -1,205 +1,105 @@
 @use "../../styles/colors" as *;
 
-/*.user-playlists {
+.user-playlists {
     .user-playlists__list {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 40px;
+        flex-direction: column;
+        gap: 30px;
 
         .user-playlists__item {
-            width: 250px;
-            height: 250px;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: transform 0.3s ease-in;
-
-            .user-playlists__image {
-                max-width: 100%;
-                object-fit: cover;
-                transition: opacity 0.3s ease-in;
-            }
-
-            .user-playlists__overlay {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: $pureBlack;
-                opacity: 0.6;
-            }
-
-            .user-playlists__data {
-                max-width: 100%;
-                padding: 12px;
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                opacity: 1;
-                transition: opacity 0.3s ease-in;
-                text-shadow: $textShadow;
-
-                .user-playlists__title {
-                    font-size: 20px;
-                }
-
-                .user-playlists__info {
-                    font-size: 14px;
-                }
-            }
-
-            &:hover {
-                transform: scale(1.05);
-                box-shadow: $floatingBoxShadow;
-
-                .user-playlists__data { opacity: 1 }
-                .user-playlists__overlay { opacity: 0}
-            }
-
-            &:last-child {
-                justify-self: flex-start;
-            }
-        }
-    }
-}*/
-
-.user-playlists {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    background-color: #121212; // Color de fondo oscuro, similar a Spotify
-    min-height: 100vh;
-
-    &__list {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        width: 100%;
-        max-width: 800px;
-    }
-
-    &__item {
-        background: #181818;
-        border-radius: 10px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-
-        &:hover {
-            transform: scale(1.02);
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.5);
-        }
-    }
-
-    &__playlist {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem;
-        cursor: pointer;
-    }
-
-    &__image {
-        width: 80px;
-        height: 80px;
-        border-radius: 5px;
-        object-fit: cover;
-    }
-
-    &__details {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
-
-    &__title {
-        font-size: 1rem;
-        font-weight: bold;
-        color: #fff;
-        margin-bottom: 0.3rem;
-    }
-
-    &__description {
-        font-size: 0.85rem;
-        color: #b3b3b3;
-    }
-
-    &__tracklist {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-in-out;
-
-        .expanded & {
-            max-height: 500px; // Altura expandida
-            overflow-y: auto;
-        }
-    }
-
-    &__track {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 0.8rem 1rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        background-color: #181818;
-        transition: background 0.3s;
-
-        &:hover {
-            background-color: #282828;
-        }
-    }
-
-    .track-info {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex: 1;
-    }
-
-    .track-image {
-        width: 50px;
-        height: 50px;
-        border-radius: 5px;
-        object-fit: cover;
-    }
-
-    .track-name {
-        font-size: 0.9rem;
-        color: #fff;
-    }
-
-    .spotify-player-container {
-        flex-shrink: 0;
-        width: 300px;
-        iframe {
             width: 100%;
-            height: 80px;
-            border-radius: 8px;
-        }
-    }
+            max-height: 250px;
+            position: relative;
 
-    &__toggle-btn {
-        width: 100%;
-        background: none;
-        border: none;
-        color: #1db954;
-        font-weight: bold;
-        font-size: 0.9rem;
-        padding: 0.8rem;
-        cursor: pointer;
-        transition: color 0.3s;
+            .user-playlists__playlist {
+                display: flex;
+                justify-content: space-between;
+                gap: 15px;
 
-        &:hover {
-            color: #1ed760;
+                .user-playlists__image {
+                    max-width: 250px;
+                    max-height: 250px;
+                    border-radius: 16px;
+                    overflow: hidden;
+
+                    .user-playlists__image-image {
+                        max-width: 100%;
+                        object-fit: cover;
+                    }
+                }
+
+                .user-playlists__details {
+                    max-width: calc(100% - 265px);
+                    max-height: 250px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 5px;
+                    width: 100%;
+                    background-color: $mediumGray;
+                    border-radius: 16px;
+                    padding: 20px;
+                    transition: all 0.3s ease-in;
+
+                    .user-playlists__title {
+                        width: 100%;;
+                        font-size: 20px;
+                    }
+
+                    .user-playlists__tracklist {
+                        width: 100%;
+                    }
+
+                    .user-playlists__btn-container {
+                        width: calc(100% + 40px);
+                        display: flex;
+                        justify-content: flex-end;
+                        background-color: rgba(45, 45, 45, 0.85);
+                        border-radius: 0 0 16px 16px;
+                        margin: -28px -20px;
+                        margin-bottom: 0;
+                        padding: 4px 20px 8px 0;
+                        transition: all 0.3s ease-in;
+                    
+                        .user-playlists__toggle-btn {
+                            color: $pureWhite;
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            text-shadow: $textShadow;
+                    
+                            .icon {
+                                font-size: 12px;
+                            }
+                    
+                            &:hover {
+                                color: $limePop;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+
+            &.expanded {
+                max-height: fit-content;
+
+                .user-playlists__details {
+                    max-height: fit-content;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    z-index: 999;
+                    box-shadow: $floatingBoxShadow;
+                    background-color: $midLightGray;
+
+                    .user-playlists__btn-container {
+                        margin-top: 0;
+                        padding-bottom: 0;
+                        background-color: transparent;
+                    }
+                }
+            }
         }
     }
 }
