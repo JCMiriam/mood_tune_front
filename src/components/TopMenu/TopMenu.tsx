@@ -25,9 +25,6 @@ const TopMenu: React.FC = () => {
                 <li className={`topmenu__link ${location.pathname === "/my-playlists" ? "selected" : ""}`}>
                     <Link to="/my-playlists">{t('navbar.playlists')}</Link>
                 </li>
-                <li className={`topmenu__link ${location.pathname === "/stats" ? "selected" : ""}`}>
-                    <Link to="/stats">{t('navbar.stats')}</Link>
-                </li>
                 <li className={`topmenu__link ${location.pathname === "/moods" ? "selected" : ""}`}>
                     <Link to="/moods">{t('navbar.moods')}</Link>
                 </li>

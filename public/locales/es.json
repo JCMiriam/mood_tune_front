@@ -13,7 +13,7 @@
         "preparing": "Estamos preparando tus playlists"
     },
     "navbar": {
-        "mood-form": "Recomiéndame una playlist!",
+        "mood-form": "¡Recomiéndame una playlist!",
         "playlists": "Mis playlists",
         "stats": "Mis estadísticas",
         "moods": "Mis moods",
@@ -35,7 +35,7 @@
         "preferences-learn": "Aprende más sobre estos parámetros aquí",
         "textarea-placeholder": "Cuéntanos cómo te sientes",
         "get-playlist-mood": "Dame una playlist basada en mi mood",
-        "get-something-like": "Simplemente dame algo que me guste",
+        "get-something-like": "Dame una playlist basada en mis preferencias",
         "or": "o",
         "form-info": "Nuestra aplicación usa dos modelos diferentes, con los cuales podrás obtener resultados basados en tus gustos y/o en tu estado de ánimo actual. Cada modelo tiene sus propios requisitos y, dado que la opción que recomienda una playlist según tu estado de ánimo combina ambos modelos, es posible que sea un poco más lenta que la otra opción. ¡Te animamos a probar ambas opciones para encontrar los resultados que mejor se adapten a lo que necesitas en cada momento!"
     },

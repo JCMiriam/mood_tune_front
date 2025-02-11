@@ -35,7 +35,7 @@
         "preferences-learn": "Learn more about these parameters here",
         "textarea-placeholder": "Tell us how do you feel",
         "get-playlist-mood": "Get a playlist based on my mood",
-        "get-something-like": "Just give me something I like",
+        "get-something-like": "Get a playlist based on my preferences",
         "or": "or",
         "form-info": "Our application uses two different models, allowing you to get results based on your preferences and/or your current mood. Each model has its own requirements, and since the option that recommends a playlist based on your mood combines both models, it may be slightly slower than the other option. We encourage you to try both options to find the results that best suit your needs at any given moment!"
     },

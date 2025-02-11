@@ -16,7 +16,7 @@ const Moods = () => {
     }
 
     // Asegurar que el nombre del mood sea el correcto al crear la playlist
-    const savedMoodText = localStorage.getItem("moodText") || "My Mood List";
+    const savedMoodText = localStorage.getItem("moodText") || "My MoodList";
     setMoodText(savedMoodText);
   }, []);
 
@@ -29,18 +29,10 @@ const Moods = () => {
     setErrorMessage("");
 
     try {
-      const userMood = `My Mood List: ${moodText}`; // Asegura que use el nombre correcto
+      const userMood = `My MoodList: ${moodText}`;
       const trackUris = playlist.map(song => `spotify:track:${getSpotifyId(song.spotify_url)}`);
       const accessToken = localStorage.getItem("access_token");
 
-      if (!accessToken) {
-        alert("No estás autenticado con Spotify. Por favor, inicia sesión.");
-        return;
-      }
-
-      console.log("🎵 Creando playlist en Spotify...");
-
-      // 1️⃣ Obtener el User ID del usuario
       const userResponse = await fetch(`https://api.spotify.com/v1/me`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -149,7 +141,6 @@ const Moods = () => {
                   width="80%"  // Reducir el ancho
                   height="80"
                   frameBorder="0"
-                  allowTransparency={true}
                   allow="encrypted-media"
                   className="spotify-player"
                 ></iframe>
