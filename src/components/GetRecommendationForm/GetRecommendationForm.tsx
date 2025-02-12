@@ -49,14 +49,14 @@ export const GetRecommendationForm = () => {
     };
   
     return (
-      <div className="mood-form">
+      <div className="recomendation-form">
         <GenreFilter selectedGenres={selectedGenres} setSelectedGenres={setSelectedGenres} />
-        <div className="mood-form__form-main">
+        <div className="recomendation-form__form-main">
           <ParametersSettings />
-          <div className="mood-form__block-bottom">
+          <div className="recomendation-form__block-right">
             <VerticalParametersSettings />
+            <Button type="button" variant="secondary" text={loading ? "Cargando..." : t("mood-form.get-playlist")} onClick={handleGetSimilarSongs} />
           </div>
-          <Button type="button" variant="secondary" text={loading ? "Cargando..." : t("mood-form.get-something-like")} onClick={handleGetSimilarSongs} />
         </div>
       </div>
     );

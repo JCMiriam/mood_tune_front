@@ -4,7 +4,7 @@ import Button from "../../components/Button/Button";
 import { Textarea } from "../../components/Textarea/Textarea";
 import GenreFilter from "../../components/GenreFilter/GenreFilter";
 import { useNavigate } from "react-router-dom";
-import { API_URL, reducedGenreGroups } from "../../config";
+import { API_URL, genreGroups } from "../../config";
 import "./GetMoodForm.scss";
 
 export const GetMoodForm = () => {
@@ -22,17 +22,16 @@ export const GetMoodForm = () => {
       try {
         let additionalKeywords: string[] = [];
         if (!selectedGenres.includes("all genres")) {
-          additionalKeywords = selectedGenres.flatMap(genre => reducedGenreGroups[genre] || []);
+          additionalKeywords = selectedGenres.flatMap(genre => genreGroups[genre] || []);
         }
-  
-        const finalMoodText = additionalKeywords.length > 0 
-          ? `${moodText} ${additionalKeywords.join(" ")}`
-          : moodText;
-  
+    
         const response = await fetch(`${API_URL}/songs/mood`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ moodText: finalMoodText }),
+          body: JSON.stringify({ 
+            moodText: moodText,
+            genres: additionalKeywords
+           }),
         });
   
         if (!response.ok) throw new Error("Error al obtener la playlist");
@@ -54,7 +53,6 @@ export const GetMoodForm = () => {
           <GenreFilter selectedGenres={selectedGenres} setSelectedGenres={setSelectedGenres} />
           <div className="mood-form__form-main">
             <div className="mood-form__form-form">
-              <h4 className="mood-form__form-title">{t("mood-form.title")}</h4>
               <Textarea
                 id="moodText"
                 value={moodText}
@@ -62,7 +60,7 @@ export const GetMoodForm = () => {
                 placeholder={t("mood-form.textarea-placeholder")}
                 className="mood-form__form-textarea"
               />
-              <Button type="submit" variant="primary" text={loading ? "Cargando..." : t("mood-form.get-playlist-mood")} />
+              <Button type="submit" variant="primary" text={loading ? "Cargando..." : t("mood-form.get-playlist")} />
             </div>
           </div>
         </form>

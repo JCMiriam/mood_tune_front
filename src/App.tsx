@@ -3,7 +3,7 @@ import TopMenu from "./components/TopMenu/TopMenu";
 import Login from "./pages/Login/Login";
 import Callback from "./pages/Login/Callback";
 import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy";
-import MoodForm from "./pages/MoodForm/MoodForm";
+import MoodForm from "./pages/MainForm/MainForm";
 import Moods from "./pages/Moods/Moods";
 import ProtectedRoute from "./hooks/protectedRoute";
 import MyPlaylists from "./pages/MyPlaylists/MyPlaylists";

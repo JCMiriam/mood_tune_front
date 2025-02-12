@@ -1,64 +1,89 @@
 @use "../../styles/colors" as *;
 
 .parameters-settings {
-    width: 300px;
-    
-    .parameters-settings__title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 16px;
-        margin-bottom: 16px;      
+  width: 300px;
+
+  .parameters-settings__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .parameters-settings__settings {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .parameters-settings__item {
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
-    .parameters-settings__settings {
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-
-        .parameters-settings__item {
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .parameters-settings__label {
-            color: $lightGray;
-            font-size: 12px;
-        }
-
-        input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            max-width: 100%;
-            height: 6px;
-            background: $irisGradient;
-            border-radius: 5px;
-            outline: none;
-            transition: all 0.3s ease-in;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: $pureWhite;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: $pureWhite;
-            border-radius: 50%;
-            cursor: pointer;
-        }
+    .parameters-settings__label {
+      color: $lightGray;
+      font-size: 12px;
     }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      max-width: 100%;
+      height: 6px;
+      background: $irisGradient;
+      border-radius: 5px;
+      outline: none;
+      transition: all 0.3s ease-in;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: $pureWhite;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: $pureWhite;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  }
+
+  /* Contenedor para las opciones extra con transición */
+  .parameters-settings__extra {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+  }
+  /* Clase que se aplica cuando se expande el contenedor */
+  .parameters-settings__extra.expanded {
+    /* El valor de max-height debe ser suficiente para el contenido.
+       Si se requiere mayor flexibilidad se puede calcular dinámicamente. */
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .parameters-settings__toggle {
+    background: none;
+    border: none;
+    color: $pureWhite; // Cambia este valor por el color deseado
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    text-align: center;
+    transition: color 0.3s ease;
+    &:hover {
+      color: darken($limePop, 10%);
+    }
+  }
 }
-
-
-
-  

@@ -9,6 +9,7 @@ interface ButtonProps {
   disabled?: boolean;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
+  className?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({

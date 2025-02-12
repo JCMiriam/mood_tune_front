@@ -24,14 +24,13 @@ const ParametersSettings = () => {
   const { favouriteTracks, requestsCompleted } = useFilteredTracks();
   const [preferences, setPreferences] = useState<{ [key: string]: number }>({});
   const [loading, setLoading] = useState<boolean>(true);
+  const [showMore, setShowMore] = useState<boolean>(false);
 
-  // Obtener importancias desde el localStorage
   const getImportances = useCallback(() => {
     const storedSettings = localStorage.getItem("moodtune_settings");
     return storedSettings ? JSON.parse(storedSettings) : {};
   }, []);
 
-  // Función para obtener la canción central desde el backend (ahora con useCallback)
   const fetchCentralSong = useCallback(async () => {
     if (favouriteTracks.length === 0) {
       console.warn("No hay canciones favoritas para procesar.");
@@ -60,7 +59,7 @@ const ParametersSettings = () => {
 
       if (centralSong) {
         const newPreferences = SETTINGS.reduce((acc, setting) => {
-          acc[setting] = Math.round(centralSong[setting] * 100); // Normalizamos a porcentaje
+          acc[setting] = Math.round(centralSong[setting] * 100);
           return acc;
         }, {} as { [key: string]: number });
 
@@ -74,7 +73,6 @@ const ParametersSettings = () => {
     }
   }, [favouriteTracks, getImportances]);
 
-  // Cargar preferencias guardadas en localStorage al iniciar
   useEffect(() => {
     const savedPreferences = localStorage.getItem("moodtune_preferences");
     if (savedPreferences) {
@@ -88,14 +86,12 @@ const ParametersSettings = () => {
     }
   }, []);
 
-  // Cuando `requestsCompleted` cambie y haya canciones favoritas, obtener la canción central
   useEffect(() => {
     if (requestsCompleted) {
       fetchCentralSong();
     }
   }, [requestsCompleted, fetchCentralSong]);
 
-  // Guardar preferencias actualizadas en localStorage
   useEffect(() => {
     if (Object.keys(preferences).length > 0) {
       localStorage.setItem("moodtune_preferences", JSON.stringify(preferences));
@@ -108,6 +104,8 @@ const ParametersSettings = () => {
       [setting]: value,
     }));
   };
+
+  const visibleSettings = showMore ? SETTINGS : SETTINGS.slice(0, 6);
 
   return (
     <div className="parameters-settings">
@@ -124,29 +122,40 @@ const ParametersSettings = () => {
         {loading ? (
           <p>{t("loading")}</p>
         ) : (
-          SETTINGS.map((setting) => (
-            <div key={setting} className="parameters-settings__item">
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={preferences[setting] || 50}
-                onChange={(e) => handleChange(setting, Number(e.target.value))}
-                style={{
-                  background: `linear-gradient(90deg, 
-                    rgba(130,43,190,1) 0%, 
-                    rgba(251,111,172,1) ${preferences[setting] * 0.39}%, 
-                    rgba(227,158,61,1) ${preferences[setting] * 0.67}%, 
-                    rgba(253,229,81,1) ${preferences[setting] * 0.83}%, 
-                    rgba(205,245,103,1) 100%)`,
-                }}
-                className="parameters-settings__input"
-              />
-              <label className="parameters-settings__label">
-                {t(`settings.${setting}`)} {preferences[setting]}%
-              </label>
-            </div>
-          ))
+          <>
+            {visibleSettings.map((setting) => (
+              <div key={setting} className="parameters-settings__item">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={preferences[setting] || 50}
+                  onChange={(e) => handleChange(setting, Number(e.target.value))}
+                  style={{
+                    background: `linear-gradient(90deg, 
+                      rgba(130,43,190,1) 0%, 
+                      rgba(251,111,172,1) ${preferences[setting] * 0.39}%, 
+                      rgba(227,158,61,1) ${preferences[setting] * 0.67}%, 
+                      rgba(253,229,81,1) ${preferences[setting] * 0.83}%, 
+                      rgba(205,245,103,1) 100%)`,
+                  }}
+                  className="parameters-settings__input"
+                />
+                <label className="parameters-settings__label">
+                  {t(`settings.${setting}`)} {preferences[setting]}%
+                </label>
+              </div>
+            ))}
+            {SETTINGS.length > 6 && (
+              <button
+                type="button"
+                className="parameters-settings__toggle"
+                onClick={() => setShowMore((prev) => !prev)}
+              >
+                {showMore ? t("mostrar menos") : t("mostrar más")}
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>
