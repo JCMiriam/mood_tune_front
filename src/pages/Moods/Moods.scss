@@ -1,22 +1,10 @@
-.moods-container {
-    max-width: 800px;
-    margin: auto;
-    background: #181818;
-    color: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
+@use "../../styles/colors" as *;
+@use "../../styles/mixins" as *;
+
+.playlist__container {
+  @include container;
+  display: flex;
   
-  .moods-title {
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 20px;
-    font-weight: bold;
-    color: #1db954;
-  }
-  
-  /* 🔹 Botón para crear la playlist */
   .create-playlist-button {
     width: 100%;
     padding: 12px;
@@ -29,55 +17,103 @@
     border-radius: 8px;
     cursor: pointer;
   }
+
+  .playlist__list {
+    max-width: 800px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .playlist__song--container {
+      display: flex;
+      flex: 0 0 50%;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      background-color: #1F1F1F;
+      padding: 0;
+      padding-right: 10px;
+      border-radius: 16px;
+      max-width: fit-content;
+
+      .playlist__song--buttons {
+        border-left: 1px solid $midLightGray;
+        display: flex;
+        padding-left: 10px;
+        flex-direction: column;
+        gap: 4px;
+
+        .playlist__song--button {
+          font-size: 24px;
+          color: $lightGray;
+
+          .icon-like-filled {
+            color: $limePop;
+          }
+
+          .icon-dislike-filled {
+            color: $redError;
+          }
+        }
+      }
+    }
+  }
+
+  .playlist__data {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .playlist__data--title {
+      font-size: 24px;
+    }
+
+    .playlist__data--title-input {
+      display: flex;
+      flex-direction: column;
+
+      .playlist__data--input {
+        padding: 8px 10px;
+        border-radius: 16px;
+        border: none;
+        outline: none;
+      }
+    }
+
+    .btn--primary {
+      min-width: 100%;
   
-  /* 🔹 Canción */
-  .mood-song {
-    background: #282828;
+      .icon-play-otlined {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .playlist__data--label {
+    display: block;
+    width: 100%;
+    font-size: 16px;
+    color: $lightGray;
+  }
+
+  .playlist__data--added-list {
+    border: 1px solid $midLightGray;
+    border-radius: 16px;
     padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-  }
-  
-  /* 🔹 Encabezado de la canción */
-  .song-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .playlist__data--added-songs--song {
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
+    gap: 5px;
+
+    .icon {
+      font-size: 20px;
+    }
   }
-  
-  .song-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #fff;
-  }
-  
-  .artist-name {
-    font-size: 14px;
-    color: #ccc;
-  }
-  
-  /* 🔹 Botón de traducción */
-  .translate-button {
-    background: #1db954;
-    border: none;
-    padding: 8px 15px;
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  /* 🔹 Diseño del reproductor */
-  .spotify-player-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  
-  .spotify-player {
-    border-radius: 10px;
-    max-width: 100%;
-  }
-  
+}

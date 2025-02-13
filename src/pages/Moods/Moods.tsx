@@ -1,36 +1,108 @@
 import { useEffect, useState } from "react";
-import "./Moods.scss";
 import { RecommendedSong } from "../../types/userSpotifyData";
+import { useTranslation } from "react-i18next";
+import Button from "../../components/Button/Button";
+import { Artist } from "../../types/userSpotifyData";
+import "./Moods.scss";
 
 const Moods = () => {
+  const { t } = useTranslation();
   const [playlist, setPlaylist] = useState<RecommendedSong[]>([]);
   const [showTranslation, setShowTranslation] = useState<{ [key: string]: boolean }>({});
   const [creatingPlaylist, setCreatingPlaylist] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [moodText, setMoodText] = useState<string>(""); // Para asegurar el nombre correcto
+  const [playlistName, setPlaylistName] = useState("My MoodList");
+  const [likedSongs, setLikedSongs] = useState<{ [key: string]: boolean }>({});
+  const [dislikedSongs, setDislikedSongs] = useState<{ [key: string]: boolean }>({});
+  const [trackDetails, setTrackDetails] = useState<{ [key: string]: { title: string; artist: string } }>({});
 
   useEffect(() => {
     const savedPlaylist = localStorage.getItem("moodPlaylist");
     if (savedPlaylist) {
       setPlaylist(JSON.parse(savedPlaylist) as RecommendedSong[]);
     }
-
-    // Asegurar que el nombre del mood sea el correcto al crear la playlist
-    const savedMoodText = localStorage.getItem("moodText") || "My MoodList";
-    setMoodText(savedMoodText);
   }, []);
 
-  const toggleTranslation = (songId: string) => {
-    setShowTranslation((prev) => ({ ...prev, [songId]: !prev[songId] }));
+  const getSpotifyId = (url: string): string => {
+    const match = url.match(/track\/(\w+)/);
+    return match ? match[1] : "";
+  };
+
+  const fetchTrackDetails = async (trackId: string) => {
+    const accessToken = localStorage.getItem("access_token");
+    try {
+      const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!response.ok) {
+        console.error(`Error fetching details for track ${trackId}`);
+        return null;
+      }
+      const data = await response.json();
+      return {
+        title: data.name,
+        artist: data.artists.map((artist: Artist) => artist.name).join(", "),
+      };
+    } catch (error) {
+      console.error("Error fetching track details", error);
+      return null;
+    }
+  };
+
+  const toggleTranslation = (id: string) => {
+    setShowTranslation((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const toggleLike = async (id: string) => {
+    if (likedSongs[id]) {
+      setLikedSongs((prev) => ({ ...prev, [id]: false }));
+      setTrackDetails((prev) => {
+        const newDetails = { ...prev };
+        delete newDetails[id];
+        return newDetails;
+      });
+    } else {
+      setLikedSongs((prev) => ({ ...prev, [id]: true }));
+      setDislikedSongs((prev) => ({ ...prev, [id]: false }));
+      const details = await fetchTrackDetails(id);
+      if (details) {
+        setTrackDetails((prev) => ({ ...prev, [id]: details }));
+      }
+    }
+  };
+
+  const toggleDislike = (id: string) => {
+    if (dislikedSongs[id]) {
+      setDislikedSongs((prev) => ({ ...prev, [id]: false }));
+    } else {
+      setDislikedSongs((prev) => ({ ...prev, [id]: true }));
+      setLikedSongs((prev) => ({ ...prev, [id]: false }));
+      setTrackDetails((prev) => {
+        const newDetails = { ...prev };
+        delete newDetails[id];
+        return newDetails;
+      });
+    }
   };
 
   const createSpotifyPlaylist = async () => {
     setCreatingPlaylist(true);
     setErrorMessage("");
 
+    // Definimos la lista de URIs según las canciones con like o, si no hay ninguna, usamos todas las canciones.
+    const likedSongsList = playlist.filter((song) => likedSongs[getSpotifyId(song.spotify_url)]);
+    let trackUris: string[] = [];
+    if (playlist.length === 0) {
+      setErrorMessage("No hay canciones en la lista.");
+      setCreatingPlaylist(false);
+      return;
+    } else if (likedSongsList.length > 0) {
+      trackUris = likedSongsList.map((song) => `spotify:track:${getSpotifyId(song.spotify_url)}`);
+    } else {
+      trackUris = playlist.map((song) => `spotify:track:${getSpotifyId(song.spotify_url)}`);
+    }
+
     try {
-      const userMood = `My MoodList: ${moodText}`;
-      const trackUris = playlist.map(song => `spotify:track:${getSpotifyId(song.spotify_url)}`);
       const accessToken = localStorage.getItem("access_token");
 
       const userResponse = await fetch(`https://api.spotify.com/v1/me`, {
@@ -39,7 +111,6 @@ const Moods = () => {
 
       if (!userResponse.ok) {
         const errorData = await userResponse.json();
-        console.error("❌ Error al obtener el User ID de Spotify", errorData);
         setErrorMessage(`Error: ${errorData.error.message}`);
         return;
       }
@@ -47,7 +118,6 @@ const Moods = () => {
       const userData = await userResponse.json();
       const userId = userData.id;
 
-      // 2️⃣ Crear la playlist en Spotify
       const createPlaylistResponse = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
         method: "POST",
         headers: {
@@ -55,7 +125,7 @@ const Moods = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: userMood,
+          name: playlistName,
           description: "Playlist generada por MoodTune",
           public: false,
         }),
@@ -71,9 +141,6 @@ const Moods = () => {
       const playlistData = await createPlaylistResponse.json();
       const playlistId = playlistData.id;
 
-      console.log(`✅ Playlist creada con éxito: ${playlistData.name} (ID: ${playlistId})`);
-
-      // 3️⃣ Agregar las canciones a la playlist creada
       const addTracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
         method: "POST",
         headers: {
@@ -85,14 +152,11 @@ const Moods = () => {
 
       if (!addTracksResponse.ok) {
         const errorData = await addTracksResponse.json();
-        console.error("❌ Error al añadir canciones a la playlist", errorData);
         setErrorMessage(`Error al añadir canciones: ${errorData.error.message}`);
         return;
       }
 
       console.log("🎶 Canciones añadidas con éxito.");
-
-      // 4️⃣ Redirigir automáticamente a la playlist creada en Spotify
       window.open(playlistData.external_urls.spotify, "_blank");
 
     } catch (error) {
@@ -103,62 +167,103 @@ const Moods = () => {
     }
   };
 
+  const likedSongsList = playlist.filter((song) => likedSongs[getSpotifyId(song.spotify_url)]);
+
   return (
-    <div className="moods-container">
-      <h2 className="moods-title">🎶 Tu Playlist Recomendada 🎶</h2>
+    <div className="playlist__container">
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      {errorMessage && <p className="error-message">❌ {errorMessage}</p>}
+      <ul className="playlist__list">
+        {playlist.map((song, index) => {
+          const songId = getSpotifyId(song.spotify_url);
+          return (
+            <li key={index} className="playlist__song">
+              {song.processed_lyrics && song.translated_lyrics ? (
+                <div>
+                  <p className="lyrics">
+                    {showTranslation[songId]
+                      ? song.translated_lyrics
+                        ? `${song.translated_lyrics.slice(0, 499)}...`
+                        : "No translation available"
+                      : song.processed_lyrics
+                      ? `${song.processed_lyrics.slice(0, 499)}...`
+                      : "No lyrics available"}
+                  </p>
+                  <button className="translate-button" onClick={() => toggleTranslation(songId)}>
+                    {showTranslation[songId] ? "Ver en Inglés" : "Traducir Letra"}
+                  </button>
+                </div>
+              ) : null}
 
-      <button className="create-playlist-button" onClick={createSpotifyPlaylist} disabled={creatingPlaylist}>
-        {creatingPlaylist ? "Creando Playlist..." : "🟢 Crea tu Mood List en Spotify"}
-      </button>
+              <div className="playlist__song--container">
+                <div className="playlist__song--song">
+                  <iframe
+                    src={`https://open.spotify.com/embed/track/${songId}?theme=0`}
+                    width="100%"
+                    height="80"
+                    allow="encrypted-media"
+                    className="spotify-player"
+                  />
+                </div>
 
-      {playlist.length > 0 ? (
-        <ul className="moods-list">
-          {playlist.map((song, index) => (
-            <li key={index} className="mood-song">
-              <div className="song-header">
-                <h3 className="song-title">{song.song_name}</h3>
-                <p className="artist-name">{song.artist_name}</p>
-              </div>
-
-              {/* 🔹 Mostrar solo UNA versión de la letra */}
-              <p className="lyrics">
-                {showTranslation[song.id]
-                  ? song.translated_lyrics ? `${song.translated_lyrics.slice(0, 499)}...` : "No translation available"
-                  : song.processed_lyrics ? `${song.processed_lyrics.slice(0, 499)}...` : "No lyrics available"}
-              </p>
-
-              {/* 🔹 Botón para alternar traducción */}
-              <button className="translate-button" onClick={() => toggleTranslation(song.id)}>
-                {showTranslation[song.id] ? "Ver en Inglés" : "Traducir Letra"}
-              </button>
-
-              {/* 🔹 Mejor diseño del reproductor de Spotify */}
-              <div className="spotify-player-container">
-                <iframe
-                  src={`https://open.spotify.com/embed/track/${getSpotifyId(song.spotify_url)}`}
-                  width="80%"  // Reducir el ancho
-                  height="80"
-                  frameBorder="0"
-                  allow="encrypted-media"
-                  className="spotify-player"
-                ></iframe>
+                <div className="playlist__song--buttons">
+                  <button className="playlist__song--button" onClick={() => toggleLike(songId)}>
+                    <span className={likedSongs[songId] ? "icon icon-like-filled" : "icon icon-like"} />
+                  </button>
+                  <button className="playlist__song--button" onClick={() => toggleDislike(songId)}>
+                    <span className={dislikedSongs[songId] ? "icon icon-dislike-filled" : "icon icon-dislike"} />
+                  </button>
+                </div>
               </div>
             </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="no-songs">No hay canciones recomendadas aún.</p>
-      )}
+          );
+        })}
+      </ul>
+
+      <div className="playlist__data">
+        <h4 className="playlist__data--title">{t('mood-form.mood-list')}</h4>
+        <div className="playlist__data--title-input">
+          <label className="playlist__data--label">{t('mood-form.mood-list-tile')}</label>
+          <input
+            type="text"
+            className="playlist__data--input"
+            placeholder="Nombre de tu playlist"
+            value={playlistName}
+            onChange={(e) => setPlaylistName(e.target.value)}
+          />
+        </div>
+
+        {likedSongsList.length > 0 && (
+          <div className="playlist__data--added-songs">
+            <h5 className="playlist__data--label">{t('mood-form.added-songs')}</h5>
+            <ul className="playlist__data--added-list">
+              {likedSongsList.map((song) => {
+                const songId = getSpotifyId(song.spotify_url);
+                const details = trackDetails[songId];
+                return (
+                  <li className="playlist__data--added-songs--song" key={songId}>
+                    <span className="icon icon-play-otlined"></span>
+                    {details
+                      ? `${details.title} - ${details.artist}`
+                      : `${song.song_name} - ${song.artist_name}`}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
+        <Button
+          type="button"
+          variant="primary"
+          text={t('mood-form.go-to-spotify')}
+          iconPosition="right"
+          onClick={createSpotifyPlaylist}
+          disabled={creatingPlaylist}
+        />
+      </div>
     </div>
   );
-};
-
-// 🔹 Extraer ID de la canción de la URL de Spotify
-const getSpotifyId = (url: string): string => {
-  const match = url.match(/track\/(\w+)/);
-  return match ? match[1] : "";
 };
 
 export default Moods;

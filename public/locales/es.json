@@ -39,7 +39,11 @@
         "get-playlist-preferences": "Basadas en mis preferencias",
         "or": "o",
         "mood-form-info": "Con este modelo, podrás obtener una recomendación basada en tu estado de ánimo actual. Analizaremos tus palabras y te daremos varias canciones que harán match con tu mood. Ten en cuenta que de momento no estamos combinando nuestro modelo de recomendaciones basado en preferencias, por lo que es posible que obtengas resultados muy diversos. Puedes probar todas las opciones, experimentar y por supuesto, si te gusta el resultado, guardarlo entre tus playlists. ¡Te animamos descubrir!",
-        "get-playlist": "Dame una playlist"
+        "get-playlist": "Dame una playlist",
+        "mood-list": "Crea tu Mood List en Spotify",
+        "mood-list-tile": "El título de tu MoodList",
+        "go-to-spotify": "¡Crear en Spotify!",
+        "added-songs": "Canciones añadidas"
     },
     "genres": {
         "all genres": "Cualquier género",
