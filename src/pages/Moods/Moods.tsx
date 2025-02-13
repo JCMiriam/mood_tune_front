@@ -20,14 +20,10 @@ const Moods = () => {
   const [likedSongs, setLikedSongs] = useState<{ [key: string]: boolean }>({});
   const [dislikedSongs, setDislikedSongs] = useState<{ [key: string]: boolean }>({});
   const [trackDetails, setTrackDetails] = useState<{ [key: string]: { title: string; artist: string } }>({});
-  // Estado para mostrar el selector de playlists existentes
   const [showPlaylistSelector, setShowPlaylistSelector] = useState(false);
-  // Estado para guardar las playlists seleccionadas (por id)
   const [selectedExistingPlaylists, setSelectedExistingPlaylists] = useState<string[]>([]);
-  // Estado para notificaciones
   const [notification, setNotification] = useState<{ message: string; variant: "error" | "success" } | null>(null);
 
-  // Hook para obtener las playlists del usuario
   const { playlists: userPlaylists, loading: loadingPlaylists, error: playlistsError } = useUserPlaylists();
 
   useEffect(() => {
@@ -352,45 +348,49 @@ const Moods = () => {
             onClick={createSpotifyPlaylist}
             disabled={creatingPlaylist}
           />
-          <Button
-            type="button"
-            variant="secondary"
-            text="Añadir a playlist existente"
-            onClick={() => setShowPlaylistSelector(!showPlaylistSelector)}
-            disabled={addingToExistingPlaylists}
-          />
-        </div>
+          <span className="playlist__data--divisor">{t('mood-form.or')}</span>
 
-        {showPlaylistSelector && (
-          <div className="playlist-selector">
-            {loadingPlaylists && <p>Cargando tus playlists...</p>}
-            {playlistsError && <p>{playlistsError}</p>}
-            {!loadingPlaylists && userPlaylists.length === 0 && <p>No se encontraron playlists.</p>}
-            {!loadingPlaylists && (
-              <div className="playlist-checkboxes">
-                {userPlaylists.map((p) => (
-                  <div key={p.id} className="playlist-option">
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={selectedExistingPlaylists.includes(p.id)}
-                        onChange={() => togglePlaylistSelection(p.id)}
-                      />
-                      {p.name}
-                    </label>
+          <div>
+            <Button
+              type="button"
+              variant="secondary"
+              text={t('mood-form.add-to-existing-playlist')}
+              onClick={() => setShowPlaylistSelector(!showPlaylistSelector)}
+              disabled={addingToExistingPlaylists}
+            />
+
+            {showPlaylistSelector && (
+              <div className="playlist-selector">
+                {loadingPlaylists && <p>{t('mood-form.no-playlist')}</p>}
+                {playlistsError && <p>{playlistsError}</p>}
+                {!loadingPlaylists && userPlaylists.length === 0 && <p>{t('mood-form.loading-playlists')}</p>}
+                {!loadingPlaylists && (
+                  <div className="playlist-checkboxes">
+                    {userPlaylists.map((p) => (
+                      <div key={p.id} className="playlist-option">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={selectedExistingPlaylists.includes(p.id)}
+                            onChange={() => togglePlaylistSelection(p.id)}
+                          />
+                          {p.name}
+                        </label>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="primary"
+                      text={t('mood-form.add-to-playlist')}
+                      onClick={addToSelectedPlaylists}
+                      disabled={addingToExistingPlaylists || selectedExistingPlaylists.length === 0}
+                    />
                   </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="primary"
-                  text="Añadir a las playlists seleccionadas"
-                  onClick={addToSelectedPlaylists}
-                  disabled={addingToExistingPlaylists || selectedExistingPlaylists.length === 0}
-                />
+                )}
               </div>
             )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

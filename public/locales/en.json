@@ -42,13 +42,17 @@
         "get-playlist": "Give me a playlist",
         "mood-list": "Create your MoodList on Spotify",
         "mood-list-tile": "Your MoodList title",
-        "go-to-spotify": "Create on Spotify!",
+        "go-to-spotify": "Create Playlist on Spotify!",
         "added-songs": "Added songs",
         "view-lyrics": "View lyrics",
         "translate-lyrics-to-spanish": "Translate to spanish",
         "view-original-lyrics": "View original lyrics",
         "hide-lyrics": "Hide lyrics",
-        "playlist-form-description": "You can add songs to your playlist by liking as many as you want, or if you prefer, you can add them all if you don't specify any. You can also include them directly in your favorites list."
+        "playlist-form-description": "You can add songs to your playlist by liking as many as you want, or if you prefer, you can add them all if you don't specify any. You can also include them directly in your favorites list.",
+        "no-playlist": "No MoodTune Playlists found. Please create one on the first option.",
+        "loading-playlists": "Loading Playlists...",
+        "add-to-existing-playlist": "Add to existing Playlists",
+        "add-to-playlist": "Add to selected Playlists"
     },
     "my-tracks": {
         "fav-tracks": "Songs you like",

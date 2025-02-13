@@ -42,13 +42,17 @@
         "get-playlist": "Dame una playlist",
         "mood-list": "Crea tu Mood List en Spotify",
         "mood-list-tile": "El título de tu MoodList",
-        "go-to-spotify": "¡Crear en Spotify!",
+        "go-to-spotify": "¡Crear Playlist en Spotify!",
         "added-songs": "Canciones añadidas",
         "view-lyrics": "Ver letra",
         "translate-lyrics-to-spanish": "Traducir al español",
         "view-original-lyrics": "Ver letra original",
         "hide-lyrics": "Ocultar letra",
-        "playlist-form-description": "Puedes añadir a tu playlist las canciones que elijas dando like a tantas como desees o, si lo prefieres, puedes añadir todas si no especificas ninguna. También puedes incluirlas directamente en tu lista de favoritos."
+        "playlist-form-description": "Puedes añadir a tu playlist las canciones que elijas dando like a tantas como desees o, si lo prefieres, puedes añadir todas si no especificas ninguna. También puedes incluirlas directamente en tu lista de favoritos.",
+        "no-playlist": "No se han encontrado Playlists creadas con MoodTune. Por favor crea una en la primera opción.",
+        "loading-playlists": "Cargando Playlists...",
+        "add-to-existing-playlist": "Añadir a Playlists existentes",
+        "add-to-playlist": "Añadir a estas Playlists"
     },
     "my-tracks": {
         "fav-tracks": "Canciones que te gustan",

@@ -52,6 +52,7 @@
   
   .playlist__list {
     max-width: 800px;
+    max-height: fit-content;
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -118,6 +119,42 @@
   
       .icon-play-otlined {
         font-size: 20px;
+      }
+    }
+
+    .btn--secondary {
+      width: 100%;
+    }
+
+    .playlist__data--divisor {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      &::before,
+      &::after {
+        content: "";
+        display: block;
+        flex-grow: 1;
+        height: 2px;
+        background-color: $lightGray;
+      }
+    }
+    .playlist-selector {
+      background-color: $mediumGray;
+      padding: 10px 20px;
+      padding-top: 30px;
+      padding-bottom: 0;
+      border-radius: 0 0 25px 25px;
+      margin-top: -20px;
+
+      .btn--primary {
+        margin-top: 20px;
+        margin-left: -20px;
+        min-width: calc(100% + 40px);
       }
     }
   }
