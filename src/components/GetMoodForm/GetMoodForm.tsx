@@ -4,21 +4,22 @@ import Button from "../../components/Button/Button";
 import { Textarea } from "../../components/Textarea/Textarea";
 import GenreFilter from "../../components/GenreFilter/GenreFilter";
 import { useNavigate } from "react-router-dom";
+import { useLoading } from "../../context/LoadingContext/useLoading"; // Importar el hook del contexto
 import { API_URL, genreGroups } from "../../config";
 import "./GetMoodForm.scss";
 
 export const GetMoodForm = () => {
     const { t } = useTranslation();
+    const { isLoading, setIsLoading } = useLoading(); // Usar el contexto de loading
     const [moodText, setMoodText] = useState("");
     const [selectedGenres, setSelectedGenres] = useState<string[]>(["all genres"]);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
   
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (moodText.trim() === "") return;
       
-      setLoading(true);
+      setIsLoading(true); // Activar el loading global
       try {
         let additionalKeywords: string[] = [];
         if (!selectedGenres.includes("all genres")) {
@@ -43,7 +44,7 @@ export const GetMoodForm = () => {
       } catch (error) {
         console.error("Error al obtener las recomendaciones:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
   
@@ -60,11 +61,10 @@ export const GetMoodForm = () => {
                 placeholder={t("mood-form.textarea-placeholder")}
                 className="mood-form__form-textarea"
               />
-              <Button type="submit" variant="primary" text={loading ? "Cargando..." : t("mood-form.get-playlist")} />
+              <Button type="submit" variant="primary" text={isLoading ? "Cargando..." : t("mood-form.get-playlist")} disabled={isLoading} />
             </div>
           </div>
         </form>
       </div>
     );
-  };
-  
+};

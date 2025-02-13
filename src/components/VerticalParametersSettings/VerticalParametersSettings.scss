@@ -2,11 +2,9 @@
 @use "../../styles/mixins" as *;
 
 .vertical-parameters-settings {
-  border: 2px solid $mediumGray;
-  border-radius: 20px;
-  padding: 20px;
   text-align: center;
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
 

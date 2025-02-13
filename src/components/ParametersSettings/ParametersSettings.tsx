@@ -152,7 +152,7 @@ const ParametersSettings = () => {
                 className="parameters-settings__toggle"
                 onClick={() => setShowMore((prev) => !prev)}
               >
-                {showMore ? t("mostrar menos") : t("mostrar más")}
+                {showMore ? t("common.view-less") : t("common.view-more")}
               </button>
             )}
           </>

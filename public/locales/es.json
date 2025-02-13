@@ -29,9 +29,10 @@
     },
     "mood-form": {
         "title": "¿Cómo quieres tus Playlists?",
-        "settings": "Tus ajustes",
+        "settings": "Tu nivel de importancias",
         "preferences": "Tus preferencias",
         "settings-info": "Estos ajustes no indican el valor que tendrá cada uno de estos parámetros a la hora de recomendarte una playlist, sino cómo de importante es que las canciones de la misma sean similares a lo que te gusta en cada uno de los parámetros. Para calcular estos datos analizamos las canciones que te gustan, pero puedes modificarlos antes de solicitar una recomendación.",
+        "preferences-info": "Tus niveles de preferencias se calculan en base a tus gustos musicales; sin embargo si te apetece escuchar algo en concreto, puedes modificar los parámetros tanto como desees. ¡Te animamos a experimentar y descubrir!",
         "preferences-learn": "Aprende más sobre estos parámetros aquí",
         "textarea-placeholder": "Cuéntanos cómo te sientes",
         "get-playlist-mood": "Basadas en mi mood",
@@ -57,7 +58,7 @@
         "funk / disco": "Funk / Disco"
     },
     "settings": {
-        "male": "Voz Masculina/Femenina",
+        "male": "Timbre vocal",
         "danceable": "Bailabilidad",
         "tonal": "Tonalidad",
         "timbre_bright": "Brillo",

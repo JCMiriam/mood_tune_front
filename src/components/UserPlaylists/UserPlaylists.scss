@@ -4,21 +4,22 @@
     .user-playlists__list {
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 40px;
 
         .user-playlists__item {
             width: 100%;
-            max-height: 250px;
+            max-height: 280px;
             position: relative;
 
             .user-playlists__playlist {
                 display: flex;
                 justify-content: space-between;
-                gap: 15px;
+                background-color: $mediumGray;
+                    border-radius: 16px;
 
                 .user-playlists__image {
-                    max-width: 250px;
-                    max-height: 250px;
+                    max-width: 280px;
+                    max-height: 280px;
                     border-radius: 16px;
                     overflow: hidden;
 
@@ -29,8 +30,8 @@
                 }
 
                 .user-playlists__details {
-                    max-width: calc(100% - 265px);
-                    max-height: 250px;
+                    max-width: calc(100% - 260px);
+                    max-height: 280px;
                     display: flex;
                     flex-direction: column;
                     align-items: flex-end;
@@ -39,6 +40,7 @@
                     background-color: $mediumGray;
                     border-radius: 16px;
                     padding: 20px;
+                    padding-left: 30px;
                     transition: all 0.3s ease-in;
 
                     .user-playlists__title {
@@ -51,14 +53,11 @@
                     }
 
                     .user-playlists__btn-container {
-                        width: calc(100% + 40px);
+                        height: 100%;
+                        width: 100%;
+                        align-items: flex-end;
                         display: flex;
                         justify-content: flex-end;
-                        background-color: rgba(45, 45, 45, 0.85);
-                        border-radius: 0 0 16px 16px;
-                        margin: -28px -20px;
-                        margin-bottom: 0;
-                        padding: 4px 20px 8px 0;
                         transition: all 0.3s ease-in;
                     
                         .user-playlists__toggle-btn {

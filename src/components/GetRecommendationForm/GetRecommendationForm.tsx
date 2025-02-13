@@ -4,18 +4,19 @@ import Button from "../../components/Button/Button";
 import GenreFilter from "../../components/GenreFilter/GenreFilter";
 import ParametersSettings from "../../components/ParametersSettings/ParametersSettings";
 import { useNavigate } from "react-router-dom";
+import { useLoading } from "../../context/LoadingContext/useLoading";
 import { API_URL, genreGroups } from "../../config";
 import VerticalParametersSettings from "../../components/VerticalParametersSettings/VerticalParametersSettings";
 import "./GetRecommendationForm.scss";
 
 export const GetRecommendationForm = () => {
     const { t } = useTranslation();
+    const { isLoading, setIsLoading } = useLoading();
     const [selectedGenres, setSelectedGenres] = useState<string[]>(["all genres"]);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
   
     const handleGetSimilarSongs = async () => {
-      setLoading(true);
+      setIsLoading(true);
       try {
         const preferences = JSON.parse(localStorage.getItem("moodtune_preferences") || "{}");
         const importances = JSON.parse(localStorage.getItem("moodtune_settings") || "{}");
@@ -44,7 +45,7 @@ export const GetRecommendationForm = () => {
       } catch (error) {
         console.error("Error al obtener recomendaciones:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
   
@@ -55,7 +56,13 @@ export const GetRecommendationForm = () => {
           <ParametersSettings />
           <div className="recomendation-form__block-right">
             <VerticalParametersSettings />
-            <Button type="button" variant="secondary" text={loading ? "Cargando..." : t("mood-form.get-playlist")} onClick={handleGetSimilarSongs} />
+            <Button 
+              type="button" 
+              variant="secondary" 
+              text={isLoading ? "Cargando..." : t("mood-form.get-playlist")} 
+              onClick={handleGetSimilarSongs} 
+              disabled={isLoading} 
+            />
           </div>
         </div>
       </div>

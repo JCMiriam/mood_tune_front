@@ -44,7 +44,7 @@ const UserPlaylists: React.FC = () => {
                                                     {!iframeErrors[track.id] && (
                                                         <div className="spotify-player-container">
                                                             <iframe
-                                                                src={`https://open.spotify.com/embed/track/${track.external_urls?.spotify?.split("/track/")[1]?.split("?")[0]}`}
+                                                                src={`https://open.spotify.com/embed/track/${track.external_urls?.spotify?.split("/track/")[1]?.split("?")[0]}?theme=0`}
                                                                 width="100%"
                                                                 height="80"
                                                                 frameBorder="0"

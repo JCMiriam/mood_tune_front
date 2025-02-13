@@ -58,32 +58,31 @@
     }
   }
 
-  /* Contenedor para las opciones extra con transición */
   .parameters-settings__extra {
     overflow: hidden;
     max-height: 0;
     opacity: 0;
     transition: max-height 0.5s ease, opacity 0.5s ease;
   }
-  /* Clase que se aplica cuando se expande el contenedor */
+
   .parameters-settings__extra.expanded {
-    /* El valor de max-height debe ser suficiente para el contenido.
-       Si se requiere mayor flexibilidad se puede calcular dinámicamente. */
     max-height: 500px;
     opacity: 1;
   }
 
   .parameters-settings__toggle {
-    background: none;
-    border: none;
-    color: $pureWhite; // Cambia este valor por el color deseado
+    background: $mediumGray;
+    border-radius: 20px;
+    width: fit-content;
+    color: $pureWhite;
     cursor: pointer;
     font-size: 14px;
-    padding: 4px;
+    padding: 4px 10px;
     text-align: center;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+
     &:hover {
-      color: darken($limePop, 10%);
+      background: $midLightGray;
     }
   }
 }
