@@ -9,6 +9,7 @@ const Moods = () => {
   const { t } = useTranslation();
   const [playlist, setPlaylist] = useState<RecommendedSong[]>([]);
   const [showTranslation, setShowTranslation] = useState<{ [key: string]: boolean }>({});
+  const [expandedSong, setExpandedSong] = useState<string | null>(null);
   const [creatingPlaylist, setCreatingPlaylist] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [playlistName, setPlaylistName] = useState("My MoodList");
@@ -89,7 +90,7 @@ const Moods = () => {
     setCreatingPlaylist(true);
     setErrorMessage("");
 
-    // Definimos la lista de URIs según las canciones con like o, si no hay ninguna, usamos todas las canciones.
+    // Definir la lista de URIs: si hay canciones con like, se usan; sino se crean con todas.
     const likedSongsList = playlist.filter((song) => likedSongs[getSpotifyId(song.spotify_url)]);
     let trackUris: string[] = [];
     if (playlist.length === 0) {
@@ -178,23 +179,6 @@ const Moods = () => {
           const songId = getSpotifyId(song.spotify_url);
           return (
             <li key={index} className="playlist__song">
-              {song.processed_lyrics && song.translated_lyrics ? (
-                <div>
-                  <p className="lyrics">
-                    {showTranslation[songId]
-                      ? song.translated_lyrics
-                        ? `${song.translated_lyrics.slice(0, 499)}...`
-                        : "No translation available"
-                      : song.processed_lyrics
-                      ? `${song.processed_lyrics.slice(0, 499)}...`
-                      : "No lyrics available"}
-                  </p>
-                  <button className="translate-button" onClick={() => toggleTranslation(songId)}>
-                    {showTranslation[songId] ? "Ver en Inglés" : "Traducir Letra"}
-                  </button>
-                </div>
-              ) : null}
-
               <div className="playlist__song--container">
                 <div className="playlist__song--song">
                   <iframe
@@ -215,6 +199,36 @@ const Moods = () => {
                   </button>
                 </div>
               </div>
+
+              {song.processed_lyrics && song.translated_lyrics && (
+                <div className="playlist__song--lyrics">
+                  <Button
+                    variant="secondary"
+                    text={expandedSong === songId ? t('mood-form.hide-lyrics') : t('mood-form.view-lyrics')}
+                    onClick={() =>
+                      setExpandedSong(expandedSong === songId ? null : songId)
+                    }
+                  />
+                  {expandedSong === songId && (
+                    <div className="playlist__song--lyrics--content">
+                      <p className="lyrics">
+                        {showTranslation[songId]
+                          ? song.translated_lyrics
+                            ? `${song.translated_lyrics.slice(0, 499)}...`
+                            : "No translation available"
+                          : song.processed_lyrics
+                          ? `${song.processed_lyrics.slice(0, 499)}...`
+                          : "No lyrics available"}
+                      </p>
+                      <button className="translate-button" onClick={() => toggleTranslation(songId)}>
+                        {showTranslation[songId]
+                          ? t('mood-form.view-original-lyrics')
+                          : t('mood-form.translate-lyrics-to-spanish')}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </li>
           );
         })}

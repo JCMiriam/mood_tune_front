@@ -43,7 +43,11 @@
         "mood-list": "Create your MoodList on Spotify",
         "mood-list-tile": "Your MoodList title",
         "go-to-spotify": "Create on Spotify!",
-        "added-songs": "Added songs"
+        "added-songs": "Added songs",
+        "view-lyrics": "View lyrics",
+        "translate-lyrics-to-spanish": "Translate to spanish",
+        "view-original-lyrics": "View original lyrics",
+        "hide-lyrics": "Hide lyrics"
     },
     "genres": {
         "all genres": "Any genre",

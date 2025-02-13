@@ -5,19 +5,51 @@
   @include container;
   display: flex;
   
-  .create-playlist-button {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    background: #1db954;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+  .playlist__song {
+    display: flex;
+    flex-direction: column;
   }
 
+  .playlist__song--lyrics {
+    position: relative;
+    background-color: $mediumGray;;
+    border-radius: 16px;
+
+    .btn--secondary {
+      height: fit-content;
+      font-size: 14px;
+      min-width: 100%;
+      display: flex;
+      justify-content: flex-start;
+    }
+  
+    .playlist__song--lyrics--content {
+      position: absolute;
+      background-color: $mediumGray;
+      font-size: 14px;
+      padding: 20px;
+      padding-top: 10px;
+      border-radius: 16px;
+      box-shadow: $floatingBoxShadow;
+      z-index: 100;
+    }
+
+    .lyrics {
+      font-size: 14px;
+      line-height: 1.5;
+      color: $lightGray;
+    }
+  
+    .translate-button {
+      margin-top: 10px;
+      font-size: 14px;
+      background: none;
+      border: none;
+      color: $limePop;
+      cursor: pointer;
+    }
+  }
+  
   .playlist__list {
     max-width: 800px;
     display: flex;
