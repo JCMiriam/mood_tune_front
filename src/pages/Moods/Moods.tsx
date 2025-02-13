@@ -3,19 +3,32 @@ import { RecommendedSong } from "../../types/userSpotifyData";
 import { useTranslation } from "react-i18next";
 import Button from "../../components/Button/Button";
 import { Artist } from "../../types/userSpotifyData";
+import { useUserPlaylists } from "../../components/UserPlaylists/useUserPlaylists";
+import { useNavigate } from "react-router-dom";
+import Notifications from "../../components/NotificationsPopup/Notifications";
 import "./Moods.scss";
 
 const Moods = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [playlist, setPlaylist] = useState<RecommendedSong[]>([]);
   const [showTranslation, setShowTranslation] = useState<{ [key: string]: boolean }>({});
   const [expandedSong, setExpandedSong] = useState<string | null>(null);
   const [creatingPlaylist, setCreatingPlaylist] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [addingToExistingPlaylists, setAddingToExistingPlaylists] = useState(false);
   const [playlistName, setPlaylistName] = useState("My MoodList");
   const [likedSongs, setLikedSongs] = useState<{ [key: string]: boolean }>({});
   const [dislikedSongs, setDislikedSongs] = useState<{ [key: string]: boolean }>({});
   const [trackDetails, setTrackDetails] = useState<{ [key: string]: { title: string; artist: string } }>({});
+  // Estado para mostrar el selector de playlists existentes
+  const [showPlaylistSelector, setShowPlaylistSelector] = useState(false);
+  // Estado para guardar las playlists seleccionadas (por id)
+  const [selectedExistingPlaylists, setSelectedExistingPlaylists] = useState<string[]>([]);
+  // Estado para notificaciones
+  const [notification, setNotification] = useState<{ message: string; variant: "error" | "success" } | null>(null);
+
+  // Hook para obtener las playlists del usuario
+  const { playlists: userPlaylists, loading: loadingPlaylists, error: playlistsError } = useUserPlaylists();
 
   useEffect(() => {
     const savedPlaylist = localStorage.getItem("moodPlaylist");
@@ -86,34 +99,35 @@ const Moods = () => {
     }
   };
 
+  // Función para obtener los track URIs a añadir
+  const getTrackUris = () => {
+    const likedSongsList = playlist.filter((song) => likedSongs[getSpotifyId(song.spotify_url)]);
+    if (playlist.length === 0) {
+      setNotification({ message: "No hay canciones en la lista.", variant: "error" });
+      return [];
+    }
+    if (likedSongsList.length > 0) {
+      return likedSongsList.map((song) => `spotify:track:${getSpotifyId(song.spotify_url)}`);
+    }
+    return playlist.map((song) => `spotify:track:${getSpotifyId(song.spotify_url)}`);
+  };
+
   const createSpotifyPlaylist = async () => {
     setCreatingPlaylist(true);
-    setErrorMessage("");
-
-    // Definir la lista de URIs: si hay canciones con like, se usan; sino se crean con todas.
-    const likedSongsList = playlist.filter((song) => likedSongs[getSpotifyId(song.spotify_url)]);
-    let trackUris: string[] = [];
-    if (playlist.length === 0) {
-      setErrorMessage("No hay canciones en la lista.");
+    const trackUris = getTrackUris();
+    if (trackUris.length === 0) {
       setCreatingPlaylist(false);
       return;
-    } else if (likedSongsList.length > 0) {
-      trackUris = likedSongsList.map((song) => `spotify:track:${getSpotifyId(song.spotify_url)}`);
-    } else {
-      trackUris = playlist.map((song) => `spotify:track:${getSpotifyId(song.spotify_url)}`);
     }
-
     try {
       const accessToken = localStorage.getItem("access_token");
-
       const userResponse = await fetch(`https://api.spotify.com/v1/me`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       if (!userResponse.ok) {
         const errorData = await userResponse.json();
-        setErrorMessage(`Error: ${errorData.error.message}`);
-        return;
+        throw new Error(`Error: ${errorData.error.message}`);
       }
 
       const userData = await userResponse.json();
@@ -135,8 +149,7 @@ const Moods = () => {
       if (!createPlaylistResponse.ok) {
         const errorData = await createPlaylistResponse.json();
         console.error("❌ Error al crear la playlist en Spotify", errorData);
-        setErrorMessage(`Error: ${errorData.error.message}`);
-        return;
+        throw new Error(`Error: ${errorData.error.message}`);
       }
 
       const playlistData = await createPlaylistResponse.json();
@@ -153,26 +166,90 @@ const Moods = () => {
 
       if (!addTracksResponse.ok) {
         const errorData = await addTracksResponse.json();
-        setErrorMessage(`Error al añadir canciones: ${errorData.error.message}`);
-        return;
+        throw new Error(`Error al añadir canciones: ${errorData.error.message}`);
       }
 
       console.log("🎶 Canciones añadidas con éxito.");
-      window.open(playlistData.external_urls.spotify, "_blank");
-
-    } catch (error) {
-      console.error("❌ Error inesperado:", error);
-      setErrorMessage("Error inesperado. Revisa la consola.");
+      setNotification({ message: "Playlist creada y canciones añadidas con éxito.", variant: "success" });
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setNotification({ message: error.message, variant: "error" });
+      } else {
+        setNotification({ message: "Error inesperado. Revisa la consola.", variant: "error" });
+      }
     } finally {
       setCreatingPlaylist(false);
     }
   };
 
+  const addToSelectedPlaylists = async () => {
+    setAddingToExistingPlaylists(true);
+    const trackUris = getTrackUris();
+    if (trackUris.length === 0) {
+      setAddingToExistingPlaylists(false);
+      return;
+    }
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      await Promise.all(
+        selectedExistingPlaylists.map(async (playlistId) => {
+          const addTracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ uris: trackUris }),
+          });
+          if (!addTracksResponse.ok) {
+            const errorData = await addTracksResponse.json();
+            throw new Error(`Error al añadir canciones: ${errorData.error.message}`);
+          }
+        })
+      );
+      console.log("🎶 Canciones añadidas con éxito a las playlists seleccionadas.");
+      setNotification({ message: "Canciones añadidas con éxito a las playlists seleccionadas.", variant: "success" });
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setNotification({ message: error.message, variant: "error" });
+      } else {
+        setNotification({ message: "Error inesperado. Revisa la consola.", variant: "error" });
+      }
+    } finally {
+      setAddingToExistingPlaylists(false);
+      setShowPlaylistSelector(false);
+    }
+  };
+
+  // Actualizamos la lista de canciones marcadas
   const likedSongsList = playlist.filter((song) => likedSongs[getSpotifyId(song.spotify_url)]);
+
+  // Función para actualizar el estado de playlists seleccionadas
+  const togglePlaylistSelection = (playlistId: string) => {
+    setSelectedExistingPlaylists((prev) => {
+      if (prev.includes(playlistId)) {
+        return prev.filter((id) => id !== playlistId);
+      } else {
+        return [...prev, playlistId];
+      }
+    });
+  };
 
   return (
     <div className="playlist__container">
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {notification && notification.message && (
+        <Notifications
+          message={notification.message}
+          variant={notification.variant}
+          onClose={() => setNotification(null)}
+        />
+      )}
 
       <ul className="playlist__list">
         {playlist.map((song, index) => {
@@ -205,9 +282,7 @@ const Moods = () => {
                   <Button
                     variant="secondary"
                     text={expandedSong === songId ? t('mood-form.hide-lyrics') : t('mood-form.view-lyrics')}
-                    onClick={() =>
-                      setExpandedSong(expandedSong === songId ? null : songId)
-                    }
+                    onClick={() => setExpandedSong(expandedSong === songId ? null : songId)}
                   />
                   {expandedSong === songId && (
                     <div className="playlist__song--lyrics--content">
@@ -236,6 +311,7 @@ const Moods = () => {
 
       <div className="playlist__data">
         <h4 className="playlist__data--title">{t('mood-form.mood-list')}</h4>
+        <p className="playlist__data--description">{t('mood-form.playlist-form-description')}</p>
         <div className="playlist__data--title-input">
           <label className="playlist__data--label">{t('mood-form.mood-list-tile')}</label>
           <input
@@ -267,14 +343,54 @@ const Moods = () => {
           </div>
         )}
 
-        <Button
-          type="button"
-          variant="primary"
-          text={t('mood-form.go-to-spotify')}
-          iconPosition="right"
-          onClick={createSpotifyPlaylist}
-          disabled={creatingPlaylist}
-        />
+        <div className="playlist__data--buttons">
+          <Button
+            type="button"
+            variant="primary"
+            text={t('mood-form.go-to-spotify')}
+            iconPosition="right"
+            onClick={createSpotifyPlaylist}
+            disabled={creatingPlaylist}
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            text="Añadir a playlist existente"
+            onClick={() => setShowPlaylistSelector(!showPlaylistSelector)}
+            disabled={addingToExistingPlaylists}
+          />
+        </div>
+
+        {showPlaylistSelector && (
+          <div className="playlist-selector">
+            {loadingPlaylists && <p>Cargando tus playlists...</p>}
+            {playlistsError && <p>{playlistsError}</p>}
+            {!loadingPlaylists && userPlaylists.length === 0 && <p>No se encontraron playlists.</p>}
+            {!loadingPlaylists && (
+              <div className="playlist-checkboxes">
+                {userPlaylists.map((p) => (
+                  <div key={p.id} className="playlist-option">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={selectedExistingPlaylists.includes(p.id)}
+                        onChange={() => togglePlaylistSelection(p.id)}
+                      />
+                      {p.name}
+                    </label>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="primary"
+                  text="Añadir a las playlists seleccionadas"
+                  onClick={addToSelectedPlaylists}
+                  disabled={addingToExistingPlaylists || selectedExistingPlaylists.length === 0}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

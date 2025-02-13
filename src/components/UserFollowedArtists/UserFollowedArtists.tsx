@@ -1,6 +1,6 @@
 import React from "react";
 import { useUserFollowedArtists } from "./useUserFollowedArtists";
-import Error from "../Error/Error";
+import Notifications from "../NotificationsPopup/Notifications";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import "./UserFollowedArtists.scss";
 
@@ -9,7 +9,13 @@ const UserFollowedArtists: React.FC = () => {
 
     return (
         <div className="followed-artists">
-            {error && <Error message={error} onClose={() => setError(null)} />}
+            {error && (
+                <Notifications 
+                    message={error} 
+                    variant="error" 
+                    onClose={() => setError(null)} 
+                />
+            )}
 
             {loading ? (
                 <LoadingSpinner />

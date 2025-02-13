@@ -14,8 +14,8 @@
             .user-playlists__playlist {
                 display: flex;
                 justify-content: space-between;
-                background-color: $mediumGray;
-                    border-radius: 16px;
+                border-radius: 16px;
+                border: 2px solid $midLightGray;
 
                 .user-playlists__image {
                     max-width: 280px;
@@ -30,17 +30,16 @@
                 }
 
                 .user-playlists__details {
-                    max-width: calc(100% - 260px);
+                    max-width: calc(100% - 280px);
+                    box-shadow: $floatingBoxShadow;
                     max-height: 280px;
                     display: flex;
                     flex-direction: column;
                     align-items: flex-end;
                     gap: 5px;
                     width: 100%;
-                    background-color: $mediumGray;
                     border-radius: 16px;
                     padding: 20px;
-                    padding-left: 30px;
                     transition: all 0.3s ease-in;
 
                     .user-playlists__title {
@@ -50,6 +49,9 @@
 
                     .user-playlists__tracklist {
                         width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
                     }
 
                     .user-playlists__btn-container {
@@ -82,6 +84,9 @@
 
             &.expanded {
                 max-height: fit-content;
+                .user-playlists__playlist {
+                    background-color: $midLightGray;
+                }
 
                 .user-playlists__details {
                     max-height: fit-content;
@@ -90,6 +95,7 @@
                     right: 0;
                     z-index: 999;
                     box-shadow: $floatingBoxShadow;
+                    border: 2px solid $midLightGray;
                     background-color: $midLightGray;
 
                     .user-playlists__btn-container {

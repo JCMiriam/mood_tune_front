@@ -56,6 +56,7 @@ export type TrackResponse = {
         combined_genres: string;
         danceable: number;
         male: number;
+        instrumental: number;
         mood_acoustic: number;
         mood_aggressive: number;
         mood_electronic: number;

@@ -1,6 +1,6 @@
 import React from "react";
-import Error from "../Error/Error";
-import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+import Notifications from "../NotificationsPopup/Notifications";
+import { useTranslation } from "react-i18next";
 import { TrackResponse } from "../../types/userSpotifyData";
 import "./UserFavouriteTracks.scss";
 
@@ -11,15 +11,21 @@ interface UserFavouriteTracksProps {
     setError?: (error: string | null) => void;
 }
 
-const UserFavouriteTracks: React.FC<UserFavouriteTracksProps> = ({ favouriteTracks, loading, error, setError }) => {
+const UserFavouriteTracks: React.FC<UserFavouriteTracksProps> = ({ favouriteTracks, error, setError }) => {
+    const { t } = useTranslation();
+
     return (
         <div className="favourite-tracks">
-            {error && setError && <Error message={error} onClose={() => setError(null)} />}
+            {error && setError && (
+                <Notifications
+                    message={error}
+                    variant="error"
+                    onClose={() => setError(null)}
+                />
+            )}
 
-            {loading ? (
-                <LoadingSpinner />
-            ) : favouriteTracks.length === 0 ? (
-                <p>It looks like you don't have any favourite songs saved yet.</p>
+            {favouriteTracks.length === 0 ? (
+                <p>{t('my-tracks.empty-tracks')}</p>
             ) : (
                 <ul className="favourite-tracks__list">
                     {favouriteTracks.map((trackData) => {
@@ -37,64 +43,77 @@ const UserFavouriteTracks: React.FC<UserFavouriteTracksProps> = ({ favouriteTrac
                                 </div>
                                 
                                 <div className="favourite-tracks__info">
-                                    <h4 className="favourite-tracks__name">{track.original_name || "Unknown Track"}</h4>
+                                    <h4 className="favourite-tracks__name">{track.original_name}</h4>
                                     
                                     <div className="favourite-tracks__data">
-                                        <span className="favourite-tracks__artists">{track.artist || "Unknown artist"}</span>
+                                        <span className="favourite-tracks__artists">{track.artist}</span>
                                         <span> | </span>
                                         <span>{track.album || "Unknown album"}</span>
                                     </div>
                                     
                                     <div className="favourite-tracks__details">
-                                        ⏱ {(track.duration_ms ? track.duration_ms / 60000 : 0).toFixed(2)} min | ⭐ {track.popularity ?? "N/A"}
+                                        <span className="favourite-tracks__details--time">
+                                            <span className="icon icon-clook"></span>
+                                            {(track.duration_ms ? track.duration_ms / 60000 : 0).toFixed(2)} min
+                                        </span>
+
+                                        <span className="favourite-tracks__details--popularity">
+                                            <span className="icon icon-star"></span>
+                                            {track.popularity ?? "N/A"}
+                                        </span>
                                     </div>
 
                                     <div className="favourite-tracks__stats">
-                                        <div className="stat">
-                                            <span>Danceable</span>
-                                            <progress value={dataset.danceable} max="1"></progress>
-                                        </div>
-                                        <div className="stat">
-                                            <span>Male</span>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.male')}</span>
                                             <progress value={dataset.male} max="1"></progress>
                                         </div>
-                                        <div className="stat">
-                                            <span>Aggressive</span>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.danceable')}</span>
+                                            <progress value={dataset.danceable} max="1"></progress>
+                                        </div>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.tonal')}</span>
+                                            <progress value={dataset.tonal} max="1"></progress>
+                                        </div>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.timbre_bright')}</span>
+                                            <progress value={dataset.timbre_bright} max="1"></progress>
+                                        </div>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.instrumental')}</span>
+                                            <progress value={dataset.instrumental} max="1"></progress>
+                                        </div>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.mood_acoustic')}</span>
+                                            <progress value={dataset.mood_acoustic} max="1"></progress>
+                                        </div>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.mood_aggresive')}</span>
                                             <progress value={dataset.mood_aggressive} max="1"></progress>
                                         </div>
-                                        <div className="stat">
-                                            <span>Electronic</span>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.mood_electronic')}</span>
                                             <progress value={dataset.mood_electronic} max="1"></progress>
                                         </div>
-                                        <div className="stat">
-                                            <span>Happy</span>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.mood_happy')}</span>
                                             <progress value={dataset.mood_happy} max="1"></progress>
                                         </div>
-                                        <div className="stat">
-                                            <span>Party</span>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.mood_party')}</span>
                                             <progress value={dataset.mood_party} max="1"></progress>
                                         </div>
-                                        <div className="stat">
-                                            <span>Relaxed</span>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.mood_relaxed')}</span>
                                             <progress value={dataset.mood_relaxed} max="1"></progress>
                                         </div>
-                                        <div className="stat">
-                                            <span>Sad</span>
+                                        <div className="favourite-tracks__stat">
+                                            <span className="favourite-tracks__stat--data">{t('preferences.mood_sad')}</span>
                                             <progress value={dataset.mood_sad} max="1"></progress>
                                         </div>
                                     </div>
                                 </div>
-
-                                {track.spotify_url && (
-                                    <a 
-                                        href={track.spotify_url} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="favourite-tracks__link"
-                                    >
-                                        <span className="icon icon-play-outlined"></span>
-                                    </a>
-                                )}
                             </li>
                         ) : null;
                     })}

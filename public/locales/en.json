@@ -47,7 +47,14 @@
         "view-lyrics": "View lyrics",
         "translate-lyrics-to-spanish": "Translate to spanish",
         "view-original-lyrics": "View original lyrics",
-        "hide-lyrics": "Hide lyrics"
+        "hide-lyrics": "Hide lyrics",
+        "playlist-form-description": "You can add songs to your playlist by liking as many as you want, or if you prefer, you can add them all if you don't specify any. You can also include them directly in your favorites list."
+    },
+    "my-tracks": {
+        "fav-tracks": "Songs you like",
+        "top-tracks": "Your most listened to songs",
+        "description": "These are the songs we use to determine your preferences. Since your tastes may vary, we recalculate them every time you log in, allowing us to be more precise with your most recent preferences.",
+        "empty-tracks": "Upps.. It looks like you don't have any favourite songs saved yet."
     },
     "genres": {
         "all genres": "Any genre",
@@ -80,7 +87,7 @@
         "mood_sad": "Sad"
     },
     "settings": {
-        "male": "Male/Female Voice",
+        "male": "Vocal timbre",
         "danceable": "Danceable",
         "tonal": "Tonal",
         "timbre_bright": "Timbre",

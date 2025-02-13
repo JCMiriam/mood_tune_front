@@ -47,7 +47,14 @@
         "view-lyrics": "Ver letra",
         "translate-lyrics-to-spanish": "Traducir al español",
         "view-original-lyrics": "Ver letra original",
-        "hide-lyrics": "Ocultar letra"
+        "hide-lyrics": "Ocultar letra",
+        "playlist-form-description": "Puedes añadir a tu playlist las canciones que elijas dando like a tantas como desees o, si lo prefieres, puedes añadir todas si no especificas ninguna. También puedes incluirlas directamente en tu lista de favoritos."
+    },
+    "my-tracks": {
+        "fav-tracks": "Canciones que te gustan",
+        "top-tracks": "Your most listened to songs",
+        "description": "Estas son las canciones que utilizamos para determinar tus preferencias. Como tus gustos pueden variar, las calculamos cada vez que inicias sesión, así podemos ser más precisos con tus preferencias más recientes.",
+        "empty-tracks": "Upps.. It looks like you don't have any favourite songs saved yet."
     },
     "genres": {
         "all genres": "Cualquier género",
@@ -64,6 +71,20 @@
         "latin": "Latino",
         "reggae": "Reggae",
         "funk / disco": "Funk / Disco"
+    },
+    "preferences": {
+        "male": "Timbre vocal",
+        "danceable": "Bailabilidad",
+        "tonal": "Tonalidad",
+        "timbre_bright": "Brillo",
+        "instrumental": "Instrumental",
+        "mood_acoustic": "Modo Acústico",
+        "mood_aggressive": "Modo Agresivo",
+        "mood_electronic": "Modo Electrónico",
+        "mood_happy": "Modo Feliz",
+        "mood_party": "Modo Fiesta",
+        "mood_relaxed": "Modo Relajado",
+        "mood_sad": "Modo Triste"
     },
     "settings": {
         "male": "Timbre vocal",
